@@ -19,4 +19,8 @@ ADDED profile
 
 Added captcha v 2
 
-going to add edition mode
+added my messages
+
+added panel of user
+
+added edition mode
