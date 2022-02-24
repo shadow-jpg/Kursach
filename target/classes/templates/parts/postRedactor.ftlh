@@ -24,7 +24,7 @@
                     </div>
                 </div>
 
-                <input type="hidden" name="id" value="<#if message??>${message.id}</#if>>"/>
+                <input type="hidden" name="id" value="<#if message??>${message.id}</#if>"/>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary "> Save posts </button>
                 </div>

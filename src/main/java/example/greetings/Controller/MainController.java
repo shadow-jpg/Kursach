@@ -1,5 +1,6 @@
 package example.greetings.Controller;
 
+import com.mysql.cj.util.StringUtils;
 import example.greetings.Models.Message;
 import example.greetings.Models.User;
 import example.greetings.interfaces.MessageRepo;
@@ -68,6 +69,17 @@ public class MainController {
 
         Message message =new Message(tag,text,user);
 
+        saveFile(file, message);
+
+
+        messageRepo.save(message);
+        Iterable<Message> messages= messageRepo.findAll();
+        model.addAttribute("messages", messages);
+        return "main";
+
+    }
+
+    private void saveFile(MultipartFile file, Message message) throws IOException {
         if (file != null && !file.getOriginalFilename().isEmpty()){
 
             File fileDir =new File(uploadpath);
@@ -77,18 +89,11 @@ public class MainController {
             }
 
             String uuidFile= UUID.randomUUID().toString();
-            String resultFilename =uuidFile+"."+file.getOriginalFilename();
+            String resultFilename =uuidFile+"."+ file.getOriginalFilename();
 
             file.transferTo(new File(uploadpath+"/"+resultFilename));
             message.setFilename(resultFilename);
         }
-
-
-        messageRepo.save(message);
-        Iterable<Message> messages= messageRepo.findAll();
-        model.addAttribute("messages", messages);
-        return "main";
-
     }
 
     @GetMapping("/chat")
@@ -103,22 +108,49 @@ public class MainController {
     @GetMapping("/userMessages/{user}")
     public String userMessages(@AuthenticationPrincipal User CurrentUser,
                                 @PathVariable User user,
-                                Model model){
-//        User user=userRepo.findByid(Long.parseLong(usId));
+                                Model model,
+                                @RequestParam(required = false) Message message){
+
         Set<Message> messages =user.getMessages();
-        model.addAttribute("messages",messages);
+
+        if(message==null) {
+            model.addAttribute("messages", messages);
+        }else{
+            model.addAttribute("message",message);
+
+        }
+
         model.addAttribute("isCurrentUser",CurrentUser.equals(user));
 
 
        return "userMessages";
     }
 
+    @PostMapping("/userMessages/{user}")
+    public String updateMessage(@AuthenticationPrincipal User currentUser,
+                                @PathVariable User user,
+                                @RequestParam(value = "id",required = false) Message message,
+                                @RequestParam("text") String text,
+                                @RequestParam("tag") String tag,
+                                @RequestParam("file") MultipartFile file) throws IOException {
+        if(message.getAuthor().equals(currentUser)){
+            if(!StringUtils.isNullOrEmpty(text)){
+                message.setText(text);
+            }
+
+            if(!StringUtils.isNullOrEmpty(tag)){
+                message.setTag(tag);
+            }
+            saveFile(file, message);
+            messageRepo.save(message);
+        }
+
+        return "redirect:/userMessages/"+user.getId();
+
+    }
 
     @GetMapping("/ps")
     public String ps(){
         return "ps";
     }
-
-
-
 }

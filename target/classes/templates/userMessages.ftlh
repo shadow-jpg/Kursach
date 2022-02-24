@@ -3,13 +3,7 @@
 <@c.page>
 
     <#if isCurrentUser>
-
-
-                <#include "parts/postRedactor.ftlh">
-                <div>
-                    a
-                </div>
-
+        <#include "parts/postRedactor.ftlh">
     </#if>
 
     <#include "parts/postPage.ftlh">
