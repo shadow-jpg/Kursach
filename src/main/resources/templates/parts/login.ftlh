@@ -17,14 +17,14 @@
         </div>
 
         <#if isRegisterForm>
-            <div class="form-group">
-                <div>
-                    <label class="col-sm-2 col-form-label"> Email:  </label>
-                    <div class="col-sm-5">
-                        <input type="email" name="email" placeholder="mail@gmail.com"/>
-                    </div>
-                </div>
-            </div>
+<#--            <div class="form-group">-->
+<#--                <div>-->
+<#--                    <label class="col-sm-2 col-form-label"> Email:  </label>-->
+<#--                    <div class="col-sm-5">-->
+<#--                        <input type="email" name="email" placeholder="mail@gmail.com"/>-->
+<#--                    </div>-->
+<#--                </div>-->
+<#--            </div>-->
             <div class="g-recaptcha" data-sitekey="6Lc6DpseAAAAAK-kwqwHSnDfn4auIN-zTjDoBQHw"></div>
             <#if captchaError??>
                 <div class ="alert-danger" roles="alert">${captchaError}</div>
